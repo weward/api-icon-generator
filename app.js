@@ -7,7 +7,8 @@ var http = require('http'),
     cors = require('cors'),
     passport = require('passport'),
     errorhandler = require('errorhandler'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    dotenv = require('dotenv').config();
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -30,17 +31,12 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
-if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
-} else {
-  mongoose.connect('mongodb://localhost/nodeblog', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
-  mongoose.set('debug', true);
-}
-
-require('./models/User');
-require('./models/Article');
-require('./models/Comment');
-require('./config/passport');
+// if(isProduction){
+//   mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+// } else {
+//   mongoose.connect('mongodb://localhost/nodeblog', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+//   mongoose.set('debug', true);
+// }
 
 app.use(require('./routes'));
 
