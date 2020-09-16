@@ -39,40 +39,44 @@ module.exports = {
         }
     },
 
-    download(req, res, next) {
+    async download(req, res, next) {
         try {
             const dir = req.body.dir;
 
             // delete upload/file_store
-            fs.rmdir(__baseDir + "/uploads/" + dir, function(err) {
-                if (err) {
-                    return res.status(500).json({ msg: 'An error occurred' });
-                }
-            });
+            await setTimeout(function() {
+                fs.rmdir(__baseDir + "/uploads/" + dir, function(err) {
+                    if (err) {
+                        return res.status(500).json({ msg: err });
+                    }
+                });
+            }, 5000);
 
             // process download
             var file = __baseDir + '/public/'+ dir +'.zip';
-
+            
             var filename = dir + ".zip";
             var mimetype = 'application/zip';
-
-            res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-            res.setHeader('Content-type', mimetype);
-
-            var filestream = fs.createReadStream(file);
             
-            // handle error
-            filestream.on('error', function(err) {
-                next(err);
-            });
-
-            // delete file after download
-            filestream.on('end', function() {
-                fs.unlinkSync(__baseDir + "/public/" + dir + ".zip");
-            });
-
-            // download
-            filestream.pipe(res);
+            await res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+            await res.setHeader('Content-type', mimetype);
+            
+            await setTimeout(async function() {
+                var filestream = await fs.createReadStream(file);
+                
+                // handle error
+                filestream.on('error', function(err) {
+                    next(err);
+                });
+                
+                // delete file after download
+                filestream.on('end', function() {
+                    fs.unlinkSync(__baseDir + "/public/" + dir + ".zip");
+                });
+                
+                // download
+                await filestream.pipe(res);
+            }, 3000);
         } catch(err) {
             next(err);
         }
@@ -98,11 +102,9 @@ async function resize(storage_dir, file_store, image_name) {
             180,
             192
         ];
-        const splitName = image_name.split(".");
-        const imageNameWithoutExt = splitName[0];
 
         await sizes.forEach(async function(size) {
-            let outputFile = sourceDir + "/" + imageNameWithoutExt + "_" + size.toString() + ".png";
+            let outputFile = sourceDir + "/" + "icon_" + size.toString() + ".png";
 
             // Read the image.
             const image = await jimp.read(file);
