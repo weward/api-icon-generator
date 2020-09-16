@@ -14,6 +14,10 @@ To get the Node server running locally:
 
 ## Dependencies
 
+- [express-fileupload](https://github.com/richardgirges/express-fileupload) - Middleware for allowing file uploads
+- [Jimp](https://github.com/oliver-moran/jimp) - Image Processor
+- [Lodash](https://github.com/lodash/lodash) - Modern Javascript Utility Library.
+- [node-zip](https://github.com/daraosn/node-zip) - For compressing files into zip.
 - [expressjs](https://github.com/expressjs/express) - The server for handling and routing HTTP requests
 - [express-jwt](https://github.com/auth0/express-jwt) - Middleware for validating JWTs for authentication
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) - For generating JWTs used by authentication
