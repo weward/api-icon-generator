@@ -2,6 +2,7 @@ var http = require('http'),
     path = require('path'),
     methods = require('methods'),
     express = require('express'),
+    fileUpload = require('express-fileupload'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
     cors = require('cors'),
@@ -38,6 +39,11 @@ if (!isProduction) {
 //   mongoose.set('debug', true);
 // }
 
+// enable files upload
+app.use(fileUpload({
+  createParentPath: true
+}));
+
 app.use(require('./routes'));
 
 /// catch 404 and forward to error handler
@@ -73,6 +79,9 @@ app.use(function(err, req, res, next) {
     error: {}
   }});
 });
+
+// set global object 
+global.__baseDir = __dirname;
 
 // finally, let's start our server...
 var server = app.listen( process.env.PORT || 3000, function(){
